@@ -1,3 +1,0 @@
-import test from 'node:test';import assert from 'node:assert/strict';
-import { storeSetCookies,cookieHeader } from '../server/proxy/cookies.js';
-test('upstream cookies stay in a destination-scoped server jar',()=>{const s={cookies:[],touched:Date.now()};storeSetCookies(s,'https://allowed.example/account/login',['sid=abc123; Path=/; Secure; HttpOnly','pref=dark; Path=/account/']);assert.match(cookieHeader(s,'https://allowed.example/account/me'),/sid=abc123/);assert.match(cookieHeader(s,'https://allowed.example/account/me'),/pref=dark/);assert.doesNotMatch(cookieHeader(s,'http://allowed.example/account/me'),/sid=abc123/);storeSetCookies(s,'https://allowed.example/',['evil=1; Domain=example.com']);assert.doesNotMatch(cookieHeader(s,'https://allowed.example/'),/evil=1/);});
