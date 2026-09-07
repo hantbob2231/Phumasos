@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="FigureOS — a cinematic browser-based WebOS.">
+  <title>FigureOS</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+  <div id="boot" class="boot-screen" aria-hidden="true">
+    <div class="boot-mark">FIGURE</div><div class="boot-line"></div><small>WebOS</small>
+  </div>
+  <div id="wallpaper" class="wallpaper"></div>
+  <canvas id="os-particles" class="os-particles"></canvas>
+
+  <header class="system-bar glass">
+    <button class="brand-button" data-route="home" aria-label="FigureOS Home">
+      <img src="/icons/icon-192.png" alt=""><span>FIGURE OS</span><em>3.0</em>
+    </button>
+    <button id="global-search-trigger" class="global-search-pill" aria-label="Search FigureOS">
+      <span>⌕</span><span>Search games, apps, history…</span><kbd>Ctrl K</kbd>
+    </button>
+    <div class="system-actions">
+      <button id="tasks-trigger" class="icon-button" title="Running tasks">▣<i id="task-count">0</i></button>
+      <button id="notifications-trigger" class="icon-button" title="Notifications">◌<i id="notification-count">0</i></button>
+      <button id="ciri-trigger" class="ciri-orb" title="CIRI"><span></span></button>
+      <button id="clock-button" class="clock-button" title="Lock screen"><span id="status-time">--:--</span><small id="status-date">---</small></button>
+    </div>
+  </header>
+
+  <main id="workspace">
+    <section class="view active" data-view="home" id="home-view">
+      <div class="home-grid">
+        <article class="hero-panel glass home-intro">
+          <div class="eyebrow">FIGURE / DESKTOP</div>
+          <h1 id="home-greeting">Good evening.</h1>
+          <p id="home-date-long">FigureOS is ready.</p>
+          <button id="home-search" class="hero-search"><span>⌕</span> Search FigureOS <kbd>Ctrl K</kbd></button>
+          <div class="hero-status"><span class="status-dot"></span><span id="connection-label">System online</span><span>•</span><span id="home-clock">--:--</span></div>
+        </article>
+
+        <article class="glass widget jump-widget">
+          <div class="widget-heading"><span>Jump Back In</span><button data-route="figure">Open Figure →</button></div>
+          <button id="jump-back-card" class="media-card empty"><div class="media-art"></div><div><small>RECENT GAME</small><h3>No game history yet</h3><p>Open Figure to start playing.</p></div></button>
+        </article>
+
+        <article class="glass widget recent-site-widget">
+          <div class="widget-heading"><span>Recent Browser</span><button data-route="browser">Browse →</button></div>
+          <button id="recent-site-card" class="site-card"><span class="site-icon">⌁</span><div><small>LAST SITE</small><h3>New Tab</h3><p>Open the FigureOS Browser</p></div><span>↗</span></button>
+        </article>
+
+        <article class="glass widget favorites-widget">
+          <div class="widget-heading"><span>Favorite Apps</span><button data-route="apps">All Apps →</button></div>
+          <div id="favorite-apps" class="app-strip"></div>
+        </article>
+
+        <article class="glass widget quick-widget">
+          <div class="widget-heading"><span>Quick Play</span><button data-route="library">Library →</button></div>
+          <div id="quick-play" class="quick-play-grid"><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+        </article>
+
+        <article class="glass widget system-widget">
+          <div class="widget-heading"><span>System Status</span><button id="update-log-trigger">Update Log →</button></div>
+          <div class="status-grid">
+            <div><small>NETWORK</small><strong id="network-status">Online</strong></div>
+            <div><small>PROXY</small><strong id="proxy-status">Checking</strong></div>
+            <div><small>PWA</small><strong id="pwa-status">Browser</strong></div>
+            <div><small>THEME</small><strong id="theme-status">Dark</strong></div>
+          </div>
+        </article>
+
+        <article class="glass widget music-widget">
+          <div class="widget-heading"><span>System Audio</span><button data-open-app="music">Open →</button></div>
+          <div class="music-now"><div class="album-placeholder">♪</div><div><small>NOW PLAYING</small><h3 id="music-home-title">Nothing selected</h3><p id="music-home-subtitle">Open Music to choose a local audio file.</p></div><button id="music-home-toggle" class="round-control" disabled>▶</button></div>
+        </article>
+
+        <article class="glass widget weather-widget">
+          <div class="widget-heading"><span>Weather</span><button data-route="settings">Provider →</button></div>
+          <div id="weather-content" class="weather-content"><span class="weather-glyph">◒</span><div><h3>Provider not configured</h3><p>Weather stays private until you choose a provider.</p></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" data-view="browser" id="browser-view">
+      <div class="browser-window glass">
+        <div class="browser-tabbar"><div id="browser-tabs" class="browser-tabs"></div><button id="new-tab-button" class="new-tab-button" title="New tab">+</button><button id="tab-switcher-button" class="tab-switcher-button" title="Tab switcher">▤</button></div>
+        <div class="browser-toolbar">
+          <button id="browser-back" title="Back">←</button><button id="browser-forward" title="Forward">→</button><button id="browser-reload" title="Reload">↻</button><button id="browser-stop" title="Stop" class="hidden">×</button><button id="browser-home" title="Home">⌂</button>
+          <form id="address-form" class="address-form">
+            <span id="security-indicator" class="security-indicator">—</span><input id="address-input" autocomplete="off" spellcheck="false" placeholder="Search or enter an approved URL"><span id="browser-progress" class="browser-progress"></span>
+          </form>
+          <button id="bookmark-button" title="Bookmark">☆</button><button id="browser-menu-button" title="Browser menu">⋮</button>
+        </div>
+        <div id="browser-content" class="browser-content"></div>
+      </div>
+    </section>
+
+    <section class="view" data-view="figure" id="figure-view">
+      <div class="native-frame-shell glass"><iframe id="figure-frame" src="/figure/?embedded=1" title="Figure" allow="autoplay; fullscreen; pointer-lock; gamepad; clipboard-read; clipboard-write" allowfullscreen></iframe></div>
+    </section>
+
+    <section class="view" data-view="library" id="library-view">
+      <div class="section-head"><div><span class="eyebrow">FIGURE / GAMES</span><h1>Library</h1><p>Your original Figure catalog, surfaced at OS level.</p></div><div class="section-actions"><input id="library-search" placeholder="Search games…"><button id="library-open-figure">Open Figure</button></div></div>
+      <div id="library-grid" class="library-grid"><div class="library-loading glass">Loading the Figure catalog…</div></div>
+    </section>
+
+    <section class="view" data-view="apps" id="apps-view">
+      <div class="section-head"><div><span class="eyebrow">FIGURE / APPLICATIONS</span><h1>Apps</h1><p>Internal tools, native Figure, and operator-approved web apps.</p></div></div>
+      <div id="apps-grid" class="apps-grid"></div>
+      <div class="glass webapp-creator">
+        <div><h3>Add approved web app</h3><p>The URL still has to be allowed by the server-side proxy allowlist.</p></div>
+        <form id="webapp-form"><input id="webapp-name" placeholder="App name" required><input id="webapp-url" placeholder="https://service-you-control.example" required><button>Add App</button></form>
+      </div>
+    </section>
+
+    <section class="view" data-view="settings" id="settings-view">
+      <div class="section-head"><div><span class="eyebrow">FIGURE / SYSTEM</span><h1>Settings</h1><p>Appearance, particles, browser behavior, privacy, and install options.</p></div></div>
+      <div id="settings-content" class="settings-layout"></div>
+    </section>
+  </main>
+
+  <nav id="os-dock" class="os-dock glass" aria-label="Primary navigation">
+    <button data-route="home" class="active"><span>⌂</span><small>Home</small><i></i></button>
+    <button data-route="browser"><span>◫</span><small>Browser</small><i></i></button>
+    <button data-route="figure"><span>◆</span><small>Figure</small><i></i></button>
+    <button data-route="library"><span>▦</span><small>Library</small><i></i></button>
+    <button data-route="apps"><span>⠿</span><small>Apps</small><i></i></button>
+    <button data-route="settings"><span>⚙</span><small>Settings</small><i></i></button>
+  </nav>
+
+  <div id="search-overlay" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="search-dialog glass"><div class="search-input-row"><span>⌕</span><input id="global-search-input" placeholder="Search FigureOS…" autofocus><kbd>Esc</kbd></div><div id="search-results" class="search-results"></div></div>
+  </div>
+
+  <aside id="ciri-panel" class="side-panel glass"><div class="panel-head"><div><small>FIGURE INTELLIGENCE</small><h2>CIRI.</h2></div><button data-close-panel="ciri">×</button></div><div id="ciri-thread" class="ciri-thread"><div class="ciri-message assistant">Ready. Try “open Figure”, “search games for racing”, or “change wallpaper”.</div></div><form id="ciri-form" class="ciri-form"><input id="ciri-input" placeholder="Ask CIRI or type a command…"><button>↑</button></form></aside>
+  <aside id="tasks-panel" class="side-panel glass"><div class="panel-head"><div><small>SYSTEM</small><h2>Running Tasks</h2></div><button data-close-panel="tasks">×</button></div><div id="task-list" class="panel-list"></div></aside>
+  <aside id="notifications-panel" class="side-panel glass"><div class="panel-head"><div><small>SYSTEM</small><h2>Notifications</h2></div><button data-close-panel="notifications">×</button></div><div id="notification-list" class="panel-list"></div></aside>
+
+  <div id="browser-menu" class="floating-menu glass hidden">
+    <button data-browser-action="new">New Tab <kbd>Ctrl T</kbd></button><button data-browser-action="duplicate">Duplicate Tab</button><button data-browser-action="bookmarks">Bookmarks</button><button data-browser-action="history">History</button><button data-browser-action="fullscreen">Fullscreen</button>
+  </div>
+  <div id="tab-switcher" class="overlay hidden"><div class="tab-switcher-sheet glass"><div class="panel-head"><h2>Browser Tabs</h2><button id="tab-switcher-close">×</button></div><div id="tab-switcher-list"></div></div></div>
+
+  <div id="app-window" class="app-window glass hidden"><div class="app-window-bar"><div><span id="app-window-icon">◆</span><span id="app-window-title">App</span></div><div><button id="app-window-minimize">—</button><button id="app-window-close">×</button></div></div><div id="app-window-content" class="app-window-content"></div></div>
+
+  <div id="lockscreen" class="lockscreen hidden"><div class="lock-content"><small>FIGURE OS</small><div id="lock-time">--:--</div><p id="lock-date">---</p><button id="unlock-button">Click to unlock</button></div></div>
+
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>
